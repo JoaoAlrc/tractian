@@ -1,15 +1,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
 import './index.css';
-import App from './App';
+import Home from './routes/home';
+import ErrorPage from './routes/error';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    errorElement: <ErrorPage />,
+  },
+]);
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
 root.render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );
 
