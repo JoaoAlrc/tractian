@@ -5,11 +5,11 @@ import { useAssets } from '../../../../queries/assets';
 import { AssetStatusLegend } from '../../../../queries/assets/types';
 
 const statusColors: Record<string, string> = {
-  inOperation: '#73d13d', // Verde
-  inDowntime: '#ff4d4f',   // Vermelho
-  inAlert: '#ffa940',    // Laranja
-  unplannedStop: '#ffec3d', // Amarelo
-  plannedStop: '#4096ff',  // Azul
+  inOperation: '#73d13d',
+  inDowntime: '#ff4d4f',
+  inAlert: '#ffa940',
+  unplannedStop: '#ffec3d',
+  plannedStop: '#4096ff',
 };
 
 const StatusStackedBarChart = () => {
@@ -19,7 +19,7 @@ const StatusStackedBarChart = () => {
     new Set(data?.map(entry => AssetStatusLegend[entry.status]))
   );
 
-  // Extrair todas as entradas de status e ordená-las por data
+
   const allStatusEntries = data
     ?.flatMap((asset) =>
       asset.healthHistory.map((entry) => ({
@@ -30,7 +30,7 @@ const StatusStackedBarChart = () => {
     )
     .sort((a, b) => a.x - b.x);
 
-  // Mapear as entradas de status para séries de gráficos
+
   const series = data?.map((asset) => ({
     name: asset.name,
     data: allStatusEntries?.filter((entry) => entry.assetName === asset.name)
@@ -54,7 +54,9 @@ const StatusStackedBarChart = () => {
       type: 'datetime',
     },
     yAxis: {
-      // categories: allStatusEntries?.map((entry) => entry.assetName),
+      labels: {
+        enabled: false,
+      },
       title: {
         text: null,
       },

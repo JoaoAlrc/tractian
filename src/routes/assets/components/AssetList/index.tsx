@@ -34,19 +34,18 @@ const AssetList = ({ assets, users }: Props) => {
       {!!selectedAssetId && <AssetDetail asset={findAssetById(selectedAssetId)!} {...{ users }} />}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={12}>
-          <HealthscorePieChart />
-        </Col>
-        <Col span={12}>
-          <StatusStackedBarChart />
-        </Col>
-      </Row>
-
-      <Row gutter={16} style={{ marginTop: 16 }}>
-        <Col span={12}>
           <MaxTempBarChart />
         </Col>
         <Col span={12}>
           <RPMBarChart />
+        </Col>
+      </Row>
+      <Row gutter={16} style={{ marginTop: 16 }}>
+        <Col span={12}>
+          <HealthscorePieChart />
+        </Col>
+        <Col span={12}>
+          <StatusStackedBarChart />
         </Col>
       </Row>
     </>
