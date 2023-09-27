@@ -13,6 +13,7 @@ import './index.css';
 import Home from './routes/home';
 import ErrorPage from './routes/error';
 import reportWebVitals from './reportWebVitals';
+import Assets from './routes/assets';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/assets",
+    element: <Assets />,
     errorElement: <ErrorPage />,
   },
 ]);

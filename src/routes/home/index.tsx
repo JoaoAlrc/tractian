@@ -1,7 +1,8 @@
 
-import { theme } from 'antd';
+import { Card, Col, Divider, Row, Space, theme } from 'antd';
 
 import Layout from '../../components/Layout';
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const {
@@ -10,9 +11,15 @@ const Home: React.FC = () => {
 
   return (
     <Layout>
-      <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
-        Hello Traction
-      </div>
+      <Divider orientation="left">Welcome to Traction manager.</Divider>
+      <Space direction="horizontal" size={16}>
+        <Card
+          title="Assets"
+          style={{ width: 180 }}
+        >
+          <Link to="/assets">Check it out!</Link>
+        </Card>
+      </Space>
     </Layout>
   );
 };

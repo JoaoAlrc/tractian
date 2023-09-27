@@ -66,7 +66,10 @@ const Layout = ({ children }: Props) => {
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>{location.pathname.split('/')}</Breadcrumb.Item>
+            <Breadcrumb.Item>{
+              location.pathname.split('/').map((i, idx) =>
+                idx === 0 ? i : i.charAt(0).toUpperCase() + i.slice(1)
+              )}</Breadcrumb.Item>
           </Breadcrumb>
           {children}
         </Content>
