@@ -25,6 +25,10 @@
   margin: 0 16px;
 }
 
-.assetImage{
+.assetImage {
   border-radius: 4px;
+}
+
+.workordersButtonContainer {
+  margin-left: auto
 }

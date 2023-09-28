@@ -1,59 +1,84 @@
-import { useQuery, useMutation, UseMutationResult, UseQueryResult } from 'react-query';
-import { Companie } from './types';
+import { useQuery, useMutation, UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
+import { Company } from './types';
 import api from '../../api';
 
-const fetchCompanies = async (): Promise<Companie[]> => {
+const fetchCompanies = async (): Promise<Company[]> => {
   const response = await api.get(`/companies`);
   return response.data;
 };
 
-const createCompanie = async (newCompanie: string): Promise<Companie> => {
-  const response = await api.post(`/companies`, newCompanie);
+const createCompany = async (newCompany: Company): Promise<Company> => {
+  const response = await api.post(`/companies`, newCompany);
   return response.data;
 };
 
-const readCompanie = async (id: number): Promise<Companie | null> => {
+const readCompany = async (id: number): Promise<Company | null> => {
   const response = await api.get(`/companies/${id}`);
   return response.data;
 };
 
-const updateCompanie = async (id: number, updatedCompanie: string): Promise<Companie | null> => {
-  const response = await api.put(`/companies/${id}`, updatedCompanie);
+const updateCompany = async (id: number, updatedCompany: Company): Promise<Company | null> => {
+  const response = await api.put(`/companies/${id}`, updatedCompany);
   return response.data;
 };
 
-const deleteCompanie = async (id: number): Promise<void> => {
+const deleteCompany = async (id: number): Promise<void> => {
   await api.delete(`/companies/${id}`);
 };
 
-export const useCompanies = (): UseQueryResult<Companie[], unknown> => {
+export const useCompanies = (): UseQueryResult<Company[], unknown> => {
   return useQuery('companies', fetchCompanies, {
     refetchOnMount: false
   });
 };
- 
-export const useCreateCompanie = (): UseMutationResult<Companie, unknown, string> => {
-  return useMutation(createCompanie, {
-    onSuccess: () => { 
+
+export const useCreateCompany = (): UseMutationResult<Company, unknown, Company> => {
+  const queryClient = useQueryClient();
+
+  return useMutation(createCompany, {
+    onSettled: (updatedData, error) => {
+      if (!error) {
+        queryClient.setQueryData<Company[]>('companies', (prevData) => {
+          const newData = [...(prevData as Company[]), updatedData as Company];
+          return newData;
+        });
+      }
     },
   });
 };
 
-export const useReadCompanie = (id?: number): UseQueryResult<Companie | null, unknown> => { 
-  return useQuery(['companies', id], () => readCompanie(id!), {
+
+
+
+export const useReadCompany = (id?: number): UseQueryResult<Company | null, unknown> => {
+  return useQuery(['companies', id], () => readCompany(id!), {
     enabled: !!id,
   });
 };
 
-export const useUpdateCompanie = (): UseMutationResult<Companie | null, unknown, { id: number; data: string }> => {
-  return useMutation(({ id, data }: { id: number; data: string }) => updateCompanie(id, data), {
-    onSuccess: () => {
+export const useUpdateCompany = (): UseMutationResult<Company | null, unknown, { id: number; data: Company }> => {
+  const queryClient = useQueryClient();
+
+  return useMutation(({ id, data }: { id: number; data: Company }) => updateCompany(id, data), {
+    onSettled: (updatedData, error) => {
+      if (!error) {
+        queryClient.setQueryData<Company[] | undefined>('companies', (prevData) => {
+          const updatedCompanies = prevData?.map((companyItem) => {
+            if (companyItem.id === updatedData?.id) {
+              companyItem = updatedData
+            }
+
+            return companyItem;
+          });
+          return updatedCompanies;
+        });
+      }
     },
   });
 };
 
-export const useDeleteCompanie = (): UseMutationResult<void, unknown, number> => {
-  return useMutation(deleteCompanie, {
+export const useDeleteCompany = (): UseMutationResult<void, unknown, number> => {
+  return useMutation(deleteCompany, {
     onSuccess: () => {
     },
   });

@@ -8,19 +8,27 @@ import EditableTable from '../EditableTable';
 import { tableData } from './utils';
 import { useUpdateAsset } from '../../../../queries/assets';
 import { Asset, AssetStatus, AssetStatusLegend } from '../../../../queries/assets/types';
-import { useReadCompanie } from '../../../../queries/companies';
+import { useReadCompany } from '../../../../queries/companies';
 import { User } from '../../../../queries/users/types';
 import { format } from 'date-fns';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import './index.css';
 import { useReadUnit } from '../../../../queries/units';
+import { Workorders } from '../../../../queries/workorders/types';
+import { Link } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
 highchartsMore(Highcharts);
 solidGauge(Highcharts);
 
-const AssetDetail = ({ asset, users }: { asset: Asset, users: User[] | undefined }) => {
+type Props = {
+  asset: Asset;
+  users: User[] | undefined;
+  workorders: Workorders[] | undefined;
+}
+
+const AssetDetail = ({ asset, users, workorders }: Props) => {
   const [isDelegateModalOpen, setIsDelegateModalOpen] = useState<boolean>(false);
   const [selectedUserIds, setSelectedUserIds] = useState<Array<number>>(asset.assignedUserIds);
   const [isStatusSelectVisible, setIsStatusSelectVisible] = useState<boolean>(false);
@@ -28,7 +36,7 @@ const AssetDetail = ({ asset, users }: { asset: Asset, users: User[] | undefined
 
   const {
     data: dataCompanie
-  } = useReadCompanie(asset.companyId);
+  } = useReadCompany(asset.companyId);
   const {
     data: dataUnit
   } = useReadUnit(asset.companyId);
@@ -125,18 +133,18 @@ const AssetDetail = ({ asset, users }: { asset: Asset, users: User[] | undefined
       <Title level={2}>{dataUnit?.name}</Title>
       <Row>
         <Col>
-          <Title className='noMarginTitle' level={3}>{asset?.name} </Title>
-        </Col>
-        <Col>
-          {!isStatusSelectVisible
-            ? <Title className='noMarginTitle' level={3}>({AssetStatusLegend[asset?.status]})</Title>
-            : <Select
-              placeholder='Select a status'
-              value={selectedStatus}
-              className='statusSelect'
-              options={Object.values(AssetStatus).map(status => ({ value: status, label: AssetStatusLegend[status] }))}
-              onSelect={handleStatusChange}
-            />}
+          <Space direction='horizontal'>
+            <Title className='noMarginTitle' level={3}>{asset?.name} </Title>
+            {!isStatusSelectVisible
+              ? <Title className='noMarginTitle' level={3}>({AssetStatusLegend[asset?.status]})</Title>
+              : <Select
+                placeholder='Select a status'
+                value={selectedStatus}
+                className='statusSelect'
+                options={Object.values(AssetStatus).map(status => ({ value: status, label: AssetStatusLegend[status] }))}
+                onSelect={handleStatusChange}
+              />}
+          </Space>
         </Col>
         <Col>
           <Button
@@ -144,6 +152,11 @@ const AssetDetail = ({ asset, users }: { asset: Asset, users: User[] | undefined
             icon={<EditOutlined style={{ fontSize: 26, marginLeft: 4 }} />}
             onClick={() => setIsStatusSelectVisible(old => !old)}
           />
+        </Col>
+        <Col className='workordersButtonContainer'>
+          <Link to="/workorders">
+            This asset has {workorders?.length} workorders, check it out!
+          </Link>
         </Col>
       </Row>
       <Row gutter={16} className='box'>
@@ -181,6 +194,10 @@ const AssetDetail = ({ asset, users }: { asset: Asset, users: User[] | undefined
             </div>
           </div>
           <div className='uptimeContainer'>
+            <Space size={16} direction='horizontal'>
+              <Text strong>Sensors:</Text>
+              <Text>{asset.sensors[0]}</Text>
+            </Space>
             <Space size={16} direction='horizontal'>
               <Text strong>Last Uptime At:</Text>
               <Text>{format(new Date(asset.metrics.lastUptimeAt), 'dd/MM/yyyy')}</Text>

@@ -7,13 +7,15 @@ import HealthscorePieChart from '../HealthscorePieChart';
 import StatusStackedBarChart from '../StatusStackedBarChart';
 import MaxTempBarChart from '../MaxTempBarChart';
 import RPMBarChart from '../RPMBarChart';
+import { Workorders } from '../../../../queries/workorders/types';
 
 type Props = {
   assets: Asset[] | undefined,
   users: User[] | undefined
+  workorders: Workorders[] | undefined
 }
 
-const AssetList = ({ assets, users }: Props) => {
+const AssetList = ({ assets, users, workorders }: Props) => {
   const [selectedAssetId, setSelectedAssetId] = useState<number | null>(null);
 
   const findAssetById = (id: number) => {
@@ -31,7 +33,7 @@ const AssetList = ({ assets, users }: Props) => {
         onChange={handleAssetChange}
         options={assets?.map(asset => ({ value: asset.id, label: asset.name }))}
       />
-      {!!selectedAssetId && <AssetDetail asset={findAssetById(selectedAssetId)!} {...{ users }} />}
+      {!!selectedAssetId && <AssetDetail asset={findAssetById(selectedAssetId)!} {...{ users, workorders }} />}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={12}>
           <MaxTempBarChart />

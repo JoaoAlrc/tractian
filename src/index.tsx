@@ -14,6 +14,7 @@ import Home from './routes/home';
 import ErrorPage from './routes/error';
 import reportWebVitals from './reportWebVitals';
 import Assets from './routes/assets';
+import Companies from './routes/companies'; 
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
     element: <Assets />,
     errorElement: <ErrorPage />,
   },
+  {
+    path: "/companies",
+    element: <Companies />,
+    errorElement: <ErrorPage />,
+  }, 
 ]);
 
 const queryClient = new QueryClient({

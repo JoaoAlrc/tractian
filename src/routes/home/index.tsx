@@ -1,13 +1,10 @@
 
-import { Card, Col, Divider, Row, Space, theme } from 'antd';
+import { Card, Divider, Space } from 'antd';
 
 import Layout from '../../components/Layout';
 import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
 
   return (
     <Layout>
@@ -18,6 +15,18 @@ const Home: React.FC = () => {
           style={{ width: 180 }}
         >
           <Link to="/assets">Check it out!</Link>
+        </Card>
+        <Card
+          title="Companies"
+          style={{ width: 180 }}
+        >
+          <Link to="/companies">Check it out!</Link>
+        </Card>
+        <Card
+          title="Workorders"
+          style={{ width: 180 }}
+        >
+          <Link to="/workorders">Check it out!</Link>
         </Card>
       </Space>
     </Layout>
