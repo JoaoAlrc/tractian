@@ -21,6 +21,12 @@ const Home: React.FC = () => {
           style={{ width: 180 }}
         >
           <Link to="/companies">Check it out!</Link>
+        </Card> 
+        <Card
+          title="Units"
+          style={{ width: 180 }}
+        >
+          <Link to="/units">Check it out!</Link>
         </Card>
         <Card
           title="Workorders"

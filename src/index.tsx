@@ -14,7 +14,10 @@ import Home from './routes/home';
 import ErrorPage from './routes/error';
 import reportWebVitals from './reportWebVitals';
 import Assets from './routes/assets';
-import Companies from './routes/companies'; 
+import Companies from './routes/companies';
+import Users from './routes/users';
+import Units from './routes/units';
+import Workorders from './routes/workorders';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -36,6 +39,16 @@ const router = createBrowserRouter([
     element: <Companies />,
     errorElement: <ErrorPage />,
   }, 
+  {
+    path: "/units",
+    element: <Units />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/workorders/:assetId",
+    element: <Workorders />,
+    errorElement: <ErrorPage />,
+  },
 ]);
 
 const queryClient = new QueryClient({
