@@ -1,0 +1,30 @@
+.box {
+  padding: 16px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+}
+
+.uptimeContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 25%;
+  align-content: flex-end;
+}
+
+.nameText {
+  display: flex;
+  align-items: center;
+}
+
+.noMarginTitle {
+  margin: 0
+}
+
+.statusSelect {
+  width: 180px;
+  margin: 0 16px;
+}
+
+.assetImage{
+  border-radius: 4px;
+}

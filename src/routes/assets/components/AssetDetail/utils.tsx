@@ -1,4 +1,4 @@
-import { RecordTable } from "../../../../components/EditableTable";
+import { RecordTable } from "../EditableTable";
 import { Asset } from "../../../../queries/assets/types";
 
 export const tableData = (asset: Asset) => ([

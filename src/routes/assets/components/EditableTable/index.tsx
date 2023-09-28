@@ -3,6 +3,7 @@ import { Table, Input, InputNumber, Popconfirm, Form, Button } from 'antd';
 import {
   CloseCircleOutlined,
   CheckCircleOutlined,
+  EditOutlined,
 } from '@ant-design/icons';
 
 export interface RecordTable {
@@ -97,7 +98,6 @@ const EditableTable: React.FC<EditableTableProps> = ({ data, onUpdateData }) => 
       if (i === keys.length - 1) {
         current[key] = value;
       } else {
-        current[key] = current[key] || {};
         current = current[key];
       }
     }
@@ -109,13 +109,13 @@ const EditableTable: React.FC<EditableTableProps> = ({ data, onUpdateData }) => 
     {
       title: 'Label',
       dataIndex: 'label',
-      width: '25%',
+      width: '40%',
       editable: false,
     },
     {
       title: 'Value',
       dataIndex: 'value',
-      width: '25%',
+      width: '40%',
       editable: true,
     },
     {
@@ -125,14 +125,14 @@ const EditableTable: React.FC<EditableTableProps> = ({ data, onUpdateData }) => 
         const editable = isEditing(record);
         return editable ? (
           <span>
-            <CheckCircleOutlined onClick={() => save(record.keyName)} />
+            <CheckCircleOutlined style={{ fontSize: 22, marginRight: 8, color: '#73d13d' }} onClick={() => save(record.keyName)} />
             <Popconfirm title="Are you sure?" onConfirm={cancel}>
-              <CloseCircleOutlined />
+              <CloseCircleOutlined style={{ fontSize: 22, color: '#ff4d4f' }} />
             </Popconfirm>
           </span>
         ) : (
           <Button disabled={editingKey !== ''} onClick={() => edit(record)}>
-            Edit
+            <EditOutlined style={{ fontSize: 22 }} />
           </Button>
         );
       },

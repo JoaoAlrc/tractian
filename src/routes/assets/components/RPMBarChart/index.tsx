@@ -23,13 +23,16 @@ const RPMBarChart = ({ }) => {
     },
     yAxis: {
       title: {
-        text: 'RPM',
+        text: null,
       },
     },
     series: [{
       name: 'RPM',
       data: rpmData,
     }],
+    legend: {
+      enabled: false,
+    },
   };
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;

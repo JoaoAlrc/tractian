@@ -48,7 +48,7 @@ const StatusStackedBarChart = () => {
       height: 300,
     },
     title: {
-      text: 'Comparação de Status de Operação',
+      text: 'Health History',
     },
     xAxis: {
       type: 'datetime',

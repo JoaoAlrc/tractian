@@ -3,6 +3,9 @@ import AssetList from './components/AssetList';
 import { useAssets } from '../../queries/assets';
 import Layout from '../../components/Layout';
 import { useUsers } from '../../queries/users';
+import { Typography } from 'antd';
+
+const { Title } = Typography;
 
 function Assets() {
   const { data: assets, isLoading: isLoadingAssets, isError: isErrorAssets } = useAssets();
@@ -18,7 +21,7 @@ function Assets() {
 
   return (
     <Layout>
-      <h1>Lista de Ativos</h1>
+      <Title>Assets List</Title>
       <AssetList {...{ assets, users }} />
     </Layout>
   );

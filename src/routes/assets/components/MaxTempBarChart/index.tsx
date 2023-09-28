@@ -16,7 +16,7 @@ const MaxTempBarChart = () => {
       height: 300,
     },
     title: {
-      text: 'Comparação de Temperatura Máxima (°C)',
+      text: 'Max Temp (°C)',
     },
     xAxis: {
       categories: data?.map(asset => asset.name),
@@ -24,15 +24,18 @@ const MaxTempBarChart = () => {
     tooltip: {
         valueSuffix: '°C'
     },
-    yAxis: {
+    yAxis: { 
       title: {
-        text: 'Max Temp (°C)',
+        text: null,
       },
     },
     series: [{
       name: 'Max Temp',
       data: maxTempData,
     }],
+    legend: {
+      enabled: false,
+    },
   };
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;
