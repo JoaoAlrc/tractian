@@ -1,4 +1,4 @@
-import { useQuery, useMutation, UseMutationResult, UseQueryResult } from 'react-query';
+import { useQuery, useMutation, UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
 import { Unit } from './types';
 import api from '../../api';
 
@@ -22,10 +22,6 @@ const updateUnit = async (id: number, updatedUnit: Unit): Promise<Unit | null> =
   return response.data;
 };
 
-const deleteUnit = async (id: number): Promise<void> => {
-  await api.delete(`/units/${id}`);
-};
-
 export const useUnits = (): UseQueryResult<Unit[], unknown> => {
   return useQuery('units', fetchUnits, {
     refetchOnMount: false
@@ -34,9 +30,16 @@ export const useUnits = (): UseQueryResult<Unit[], unknown> => {
 
 
 export const useCreateUnit = (): UseMutationResult<Unit, unknown, Unit> => {
-  return useMutation(createUnit, {
-    onSuccess: () => {
+  const queryClient = useQueryClient();
 
+  return useMutation(createUnit, {
+    onSettled: (updatedData, error) => {
+      if (!error) {
+        queryClient.setQueryData<Unit[]>('units', (prevData) => {
+          const newData = [...(prevData as Unit[]), updatedData as Unit];
+          return newData;
+        });
+      }
     },
   });
 };
@@ -49,18 +52,22 @@ export const useReadUnit = (id: number): UseQueryResult<Unit | null, unknown> =>
 
 
 export const useUpdateUnit = (): UseMutationResult<Unit | null, unknown, { id: number; data: Unit }> => {
+  const queryClient = useQueryClient();
+
   return useMutation(({ id, data }: { id: number; data: Unit }) => updateUnit(id, data), {
-    onSuccess: () => {
+    onSettled: (updatedData, error) => {
+      if (!error) {
+        queryClient.setQueryData<Unit[] | undefined>('units', (prevData) => {
+          const updatedUnit = prevData?.map((assetItem) => {
+            if (assetItem.id === updatedData?.id) {
+              assetItem = updatedData
+            }
 
-    },
-  });
-};
-
-
-export const useDeleteUnit = (): UseMutationResult<void, unknown, number> => {
-  return useMutation(deleteUnit, {
-    onSuccess: () => {
-
+            return assetItem;
+          });
+          return updatedUnit;
+        });
+      }
     },
   });
 };

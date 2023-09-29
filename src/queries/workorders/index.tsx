@@ -1,4 +1,4 @@
-import { useQuery, useMutation, UseMutationResult, UseQueryResult } from 'react-query';
+import { useQuery, useMutation, UseMutationResult, UseQueryResult, useQueryClient } from 'react-query';
 import { Workorders } from './types';
 import api from '../../api';
 
@@ -9,7 +9,7 @@ const fetchWorkorders = async (): Promise<Workorders[]> => {
   return response.data;
 };
 
-const createWorkorders = async (newWorkorders: string): Promise<Workorders> => {
+const createWorkorders = async (newWorkorders: Workorders): Promise<Workorders> => {
   const response = await api.post(URL, newWorkorders);
   return response.data;
 };
@@ -19,13 +19,9 @@ const readWorkorders = async (id: number): Promise<Workorders | null> => {
   return response.data;
 };
 
-const updateWorkorders = async (id: number, updatedWorkorders: string): Promise<Workorders | null> => {
+const updateWorkorders = async (id: number, updatedWorkorders: Workorders): Promise<Workorders | null> => {
   const response = await api.put(`/workorders/${id}`, updatedWorkorders);
   return response.data;
-};
-
-const deleteWorkorders = async (id: number): Promise<void> => {
-  await api.delete(`/workorders/${id}`);
 };
 
 export const useWorkorders = (): UseQueryResult<Workorders[], unknown> => {
@@ -35,34 +31,45 @@ export const useWorkorders = (): UseQueryResult<Workorders[], unknown> => {
 };
 
 
-export const useCreateWorkorders = (): UseMutationResult<Workorders, unknown, string> => {
+export const useCreateWorkorders = (): UseMutationResult<Workorders, unknown, Workorders> => {
+  const queryClient = useQueryClient();
+
   return useMutation(createWorkorders, {
-    onSuccess: () => {
-      
+    onSettled: (updatedData, error) => {
+      if (!error) {
+        queryClient.setQueryData<Workorders[]>('workorders', (prevData) => {
+          const newData = [...(prevData as Workorders[]), updatedData as Workorders];
+          return newData;
+        });
+      }
     },
   });
 };
 
 export const useReadWorkorders = (id: number): UseQueryResult<Workorders | null, unknown> => {
-  return useQuery(['asset', id], () => readWorkorders(id), {
-    enabled: !!id, 
+  return useQuery(['workorders', id], () => readWorkorders(id), {
+    enabled: !!id,
   });
 };
 
 
-export const useUpdateWorkorders = (): UseMutationResult<Workorders | null, unknown, { id: number; data: string }> => {
-  return useMutation(({ id, data }: { id: number; data: string }) => updateWorkorders(id, data), {
-    onSuccess: () => {
-      
+export const useUpdateWorkorders = (): UseMutationResult<Workorders | null, unknown, { id: number; data: Workorders }> => {
+  const queryClient = useQueryClient();
+
+  return useMutation(({ id, data }: { id: number; data: Workorders }) => updateWorkorders(id, data), {
+    onSettled: (updatedData, error) => {
+      if (!error) {
+        queryClient.setQueryData<Workorders[] | undefined>('workorders', (prevData) => {
+          const updatedWorkorders = prevData?.map((assetItem) => {
+            if (assetItem.id === updatedData?.id) {
+              assetItem = updatedData
+            }
+
+            return assetItem;
+          });
+          return updatedWorkorders;
+        });
+      }
     },
   });
-};
-
-
-export const useDeleteWorkorders = (): UseMutationResult<void, unknown, number> => {
-  return useMutation(deleteWorkorders, {
-    onSuccess: () => {
-      
-    },
-  });
-};
+}; 

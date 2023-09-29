@@ -1,21 +1,23 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Image, Modal, Row, Select, Space, Typography } from 'antd';
 import Highcharts from "highcharts/highcharts.js";
 import highchartsMore from "highcharts/highcharts-more.js";
 import solidGauge from "highcharts/modules/solid-gauge.js";
 import EditableTable from '../EditableTable';
 
-import { tableData } from './utils';
 import { useUpdateAsset } from '../../../../queries/assets';
 import { Asset, AssetStatus, AssetStatusLegend } from '../../../../queries/assets/types';
 import { useReadCompany } from '../../../../queries/companies';
-import { User } from '../../../../queries/users/types';
-import { format } from 'date-fns';
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import './index.css';
 import { useReadUnit } from '../../../../queries/units';
-import { Workorders } from '../../../../queries/workorders/types';
-import { Link } from 'react-router-dom';
+import { useUsers } from '../../../../queries/users';
+import { useWorkorders } from '../../../../queries/workorders';
+
+import { tableData } from './utils';
+
+import './index.css';
 
 const { Title, Text } = Typography;
 
@@ -24,11 +26,11 @@ solidGauge(Highcharts);
 
 type Props = {
   asset: Asset;
-  users: User[] | undefined;
-  workorders: Workorders[] | undefined;
 }
 
-const AssetDetail = ({ asset, users, workorders }: Props) => {
+const AssetDetail = ({ asset }: Props) => {
+  const { data: users } = useUsers();
+  const { data: workorders, } = useWorkorders();
   const [isDelegateModalOpen, setIsDelegateModalOpen] = useState<boolean>(false);
   const [selectedUserIds, setSelectedUserIds] = useState<Array<number>>(asset.assignedUserIds);
   const [isStatusSelectVisible, setIsStatusSelectVisible] = useState<boolean>(false);
@@ -93,6 +95,8 @@ const AssetDetail = ({ asset, users, workorders }: Props) => {
     onUpdateAsset(data)
   };
 
+  const assetsWorkorders = workorders?.filter(i => i.assetId === asset.id);
+
   return (
     <>
       <Modal
@@ -154,8 +158,8 @@ const AssetDetail = ({ asset, users, workorders }: Props) => {
           />
         </Col>
         <Col className='workordersButtonContainer'>
-          <Link to="/workorders">
-            This asset has {workorders?.length} workorders, check it out!
+          <Link to={`/workorders/${asset.id}`}>
+            {assetsWorkorders?.length ? `This asset has ${assetsWorkorders.length} work orders, check it out!` : 'Create new work order for this asset!'}
           </Link>
         </Col>
       </Row>
@@ -163,7 +167,7 @@ const AssetDetail = ({ asset, users, workorders }: Props) => {
         <Col span={8}>
           <div>
             <Image
-              height={500}
+              height={390}
               className='assetImage'
               src={asset.image}
             />

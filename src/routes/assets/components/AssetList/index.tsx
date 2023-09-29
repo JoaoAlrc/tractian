@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
-import { Asset } from '../../../../queries/assets/types';
 import AssetDetail from '../AssetDetail';
 import { Col, Row, Select } from 'antd';
-import { User } from '../../../../queries/users/types';
 import HealthscorePieChart from '../HealthscorePieChart';
 import StatusStackedBarChart from '../StatusStackedBarChart';
 import MaxTempBarChart from '../MaxTempBarChart';
 import RPMBarChart from '../RPMBarChart';
-import { Workorders } from '../../../../queries/workorders/types';
+import { useAssets } from '../../../../queries/assets';
 
-type Props = {
-  assets: Asset[] | undefined,
-  users: User[] | undefined
-  workorders: Workorders[] | undefined
-}
 
-const AssetList = ({ assets, users, workorders }: Props) => {
+const AssetList = () => {
+  const { data: assets, } = useAssets();
   const [selectedAssetId, setSelectedAssetId] = useState<number | null>(null);
 
   const findAssetById = (id: number) => {
@@ -33,7 +27,7 @@ const AssetList = ({ assets, users, workorders }: Props) => {
         onChange={handleAssetChange}
         options={assets?.map(asset => ({ value: asset.id, label: asset.name }))}
       />
-      {!!selectedAssetId && <AssetDetail asset={findAssetById(selectedAssetId)!} {...{ users, workorders }} />}
+      {!!selectedAssetId && <AssetDetail asset={findAssetById(selectedAssetId)!} />}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={12}>
           <MaxTempBarChart />

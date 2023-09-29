@@ -7,9 +7,9 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout as AntdLayout, Menu, theme } from 'antd';
+import { Layout as AntdLayout, Menu, theme } from 'antd';
 import { ReactNode, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = AntdLayout;
 
@@ -42,8 +42,7 @@ const items: MenuItem[] = [
 ];
 
 const Layout = ({ children }: Props) => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate(); 
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -52,6 +51,7 @@ const Layout = ({ children }: Props) => {
 
   const handleMenuItemClick = (item: string) => {
     if (item) {
+      if (item === 'home') return navigate('/');
       navigate(`/${item}`);
     }
   };
@@ -63,17 +63,15 @@ const Layout = ({ children }: Props) => {
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ key }) => handleMenuItemClick(key)} />
       </Sider>
       <AntdLayout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>{
-              location.pathname.split('/').map((i, idx) =>
-                idx === 0 ? i : i.charAt(0).toUpperCase() + i.slice(1)
-              )}</Breadcrumb.Item>
-          </Breadcrumb>
+        <Header style={{ background: colorBgContainer }} />
+        <Content style={{ margin: '16px' }}>
           {children}
         </Content>
-        <Footer style={{ textAlign: 'center' }}>João Victor Alarcão Pereira ©2023 https://joaoalrc.dev</Footer>
+        <Footer style={{ textAlign: 'center' }}>João Victor Alarcão Pereira ©2023{' - '}
+          <Link to='https://joaoalrc.dev' target='_blank'>
+            https://joaoalrc.dev
+          </Link>
+        </Footer>
       </AntdLayout>
     </AntdLayout>
   );

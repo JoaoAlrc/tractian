@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Button, message, Select } from 'antd';
 import { Unit } from '../../../../queries/units/types';
 import { useCreateUnit, useUpdateUnit } from '../../../../queries/units';
@@ -9,6 +9,10 @@ const UnitsForm = ({ data, onFinishForm }: { data: Unit; onFinishForm: () => voi
     const { data: companies } = useCompanies();
     const createUnitMutation = useCreateUnit();
     const updateUnitMutation = useUpdateUnit();
+
+    useEffect(() => {
+        form.resetFields();
+    }, [data, form]);
 
     const onFinish = async (values: Unit) => {
         try {
@@ -29,7 +33,7 @@ const UnitsForm = ({ data, onFinishForm }: { data: Unit; onFinishForm: () => voi
             <Form.Item name="name" label="Unit Name" initialValue={data.name}>
                 <Input />
             </Form.Item>
-            <Form.Item name="companyId" label="Company">
+            <Form.Item name="companyId" label="Company" initialValue={data.companyId}>
                 <Select>
                     {companies?.map((company) => (
                         <Select.Option key={company.id} value={company.id}>

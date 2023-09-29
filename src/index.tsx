@@ -38,14 +38,19 @@ const router = createBrowserRouter([
     path: "/companies",
     element: <Companies />,
     errorElement: <ErrorPage />,
-  }, 
+  },
+  {
+    path: "/users",
+    element: <Users />,
+    errorElement: <ErrorPage />,
+  },
   {
     path: "/units",
     element: <Units />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/workorders/:assetId",
+    path: "/workorders/:assetId?",
     element: <Workorders />,
     errorElement: <ErrorPage />,
   },
